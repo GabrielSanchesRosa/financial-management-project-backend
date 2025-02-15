@@ -1,0 +1,51 @@
+# =======================================
+# 🛑 GITIGNORE PARA SPRING BOOT + INTELLIJ IDEA
+# =======================================
+
+# 🔹 Ignorar arquivos do IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# 🔹 Ignorar logs
+logs/
+*.log
+*.out
+*.err
+
+# 🔹 Ignorar diretórios de build e dependências
+/target/
+/build/
+
+# 🔹 Ignorar arquivos de configuração do Maven/Gradle
+.mvn/
+.gradle/
+!gradle-wrapper.jar
+**/build/
+**/out/
+
+# 🔹 Ignorar credenciais e configurações locais
+application.properties
+application.yml
+.env
+
+# 🔹 Ignorar arquivos de cache e temporários
+*.swp
+*.swo
+*.bak
+*.tmp
+.DS_Store
+
+# 🔹 Ignorar binários e compilação
+*.class
+*.jar
+*.war
+*.ear
+
+# 🔹 Ignorar diretórios do banco de dados embutido (caso use H2, SQLite, etc.)
+/h2database/
+/*.db
+
+# 🔹 Ignorar arquivos do sistema operacional
+Thumbs.db
+Desktop.ini
