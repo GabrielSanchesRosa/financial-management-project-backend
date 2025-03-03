@@ -28,6 +28,6 @@ public class User implements Serializable {
     @Column(name = "email", nullable = false, length = 255)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 30)
+    @Column(name = "password", nullable = false, length = 60)
     private String password;
 }
