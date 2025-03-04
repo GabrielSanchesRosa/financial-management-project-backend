@@ -5,6 +5,7 @@ import com.sanches.financial_management_project.exceptions.ResourceNotFoundExcep
 import com.sanches.financial_management_project.mapper.UserMapper;
 import com.sanches.financial_management_project.model.User;
 import com.sanches.financial_management_project.repository.UserRepository;
+import com.sanches.financial_management_project.utils.UsernameValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,11 +42,18 @@ public class UserService {
     public UserDTO updateUser(UserDTO user) {
         var entity = userRepository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("No users found for this ID!"));
 
-        entity.setUserName(user.getUserName());
+        if (!UsernameValidator.isValidUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Invalid Username!");
+        }
+
+        entity.setUsername(user.getUsername());
         entity.setFirstName(user.getFirstName());
         entity.setLastName(user.getLastName());
         entity.setEmail(user.getEmail());
-        entity.setPassword(user.getPassword());
+
+        if (!user.getPassword().isEmpty() && !user.getPassword().equals(entity.getPassword())) {
+            entity.setPassword(user.getPassword());
+        }
 
         userRepository.save(entity);
 
