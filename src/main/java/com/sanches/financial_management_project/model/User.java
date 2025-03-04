@@ -21,11 +21,11 @@ public class User implements Serializable {
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
 
-    @Column(name = "user_name", nullable = false, length = 50)
-    private String userName;
+    @Column(name = "user_name", nullable = false, length = 50, unique = true)
+    private String username;
 
     @JsonAlias(value = "Email")
-    @Column(name = "email", nullable = false, length = 255)
+    @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false, length = 60)
