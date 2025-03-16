@@ -1,6 +1,5 @@
 package com.sanches.financial_management_project.model;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,7 +23,6 @@ public class User implements Serializable {
     @Column(name = "user_name", nullable = false, length = 50, unique = true)
     private String username;
 
-    @JsonAlias(value = "Email")
     @Column(name = "email", nullable = false, length = 255, unique = true)
     private String email;
 
