@@ -1,6 +1,7 @@
 package com.sanches.financial_management_project.service;
 
-import com.sanches.financial_management_project.dto.UserDTO;
+import com.sanches.financial_management_project.dto.request.UserRequestDTO;
+import com.sanches.financial_management_project.dto.response.UserResponseDTO;
 import com.sanches.financial_management_project.mapper.UserMapper;
 import com.sanches.financial_management_project.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,27 +30,27 @@ public class AuthenticationService {
 
     UserMapper userMapper = UserMapper.INSTANCE;
 
-    public String login(UserDTO userDTO) throws ResponseStatusException {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
+    public String login(UserRequestDTO userRequestDTO) throws ResponseStatusException {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequestDTO.getUsername(), userRequestDTO.getPassword()));
 
-        return authentication.isAuthenticated() ? JWTService.generateToken(userDTO.getUsername()) : "Incorrect Username or Password!";
+        return authentication.isAuthenticated() ? JWTService.generateToken(userRequestDTO.getUsername()) : "Incorrect Username or Password!";
     }
 
-    public UserDTO register(UserDTO userDTO) {
-        if (authenticationRepository.findByUsername(userDTO.getUsername()).isPresent()) {
+    public UserResponseDTO register(UserRequestDTO userRequestDTO) {
+        if (authenticationRepository.findByUsername(userRequestDTO.getUsername()).isPresent()) {
             System.out.println("Username already exists!");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
         }
 
-        if (authenticationRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+        if (authenticationRepository.findByEmail(userRequestDTO.getEmail()).isPresent()) {
             System.out.println("Email already exists!");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists!");
         }
 
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        userRequestDTO.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
-        var entity = authenticationRepository.save(userMapper.toEntity(userDTO));
+        var entity = authenticationRepository.save(userMapper.toEntity(userRequestDTO));
 
-        return userMapper.toDto(entity);
+        return userMapper.toResponseDTO(entity);
     }
 }

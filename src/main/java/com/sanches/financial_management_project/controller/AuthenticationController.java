@@ -1,6 +1,7 @@
 package com.sanches.financial_management_project.controller;
 
-import com.sanches.financial_management_project.dto.UserDTO;
+import com.sanches.financial_management_project.dto.request.UserRequestDTO;
+import com.sanches.financial_management_project.dto.response.UserResponseDTO;
 import com.sanches.financial_management_project.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +17,12 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public String login(@RequestBody UserDTO userDTO) {
-        return authenticationService.login(userDTO);
+    public String login(@RequestBody UserRequestDTO userRequestDTO) {
+        return authenticationService.login(userRequestDTO);
     }
 
     @PostMapping("/register")
-    public UserDTO register(@RequestBody UserDTO userDTO) {
-        return authenticationService.register(userDTO);
+    public UserResponseDTO register(@RequestBody UserRequestDTO userRequestDTO) {
+        return authenticationService.register(userRequestDTO);
     }
 }

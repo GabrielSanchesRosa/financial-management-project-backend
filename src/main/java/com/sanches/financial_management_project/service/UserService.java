@@ -1,9 +1,9 @@
 package com.sanches.financial_management_project.service;
 
-import com.sanches.financial_management_project.dto.UserDTO;
+import com.sanches.financial_management_project.dto.request.UserRequestDTO;
+import com.sanches.financial_management_project.dto.response.UserResponseDTO;
 import com.sanches.financial_management_project.exceptions.ResourceNotFoundException;
 import com.sanches.financial_management_project.mapper.UserMapper;
-import com.sanches.financial_management_project.model.User;
 import com.sanches.financial_management_project.repository.UserRepository;
 import com.sanches.financial_management_project.utils.UsernameValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,41 +23,41 @@ public class UserService {
 
     private final UserMapper userMapper = UserMapper.INSTANCE;
 
-    public List<UserDTO> listUsers() {
-        return userMapper.toDtoList(userRepository.findAll());
+    public List<UserResponseDTO> listUsers() {
+        return userMapper.toResponseDTOList(userRepository.findAll());
     }
 
-    public UserDTO findUserById(Long id) {
+    public UserResponseDTO findUserById(Long id) {
         var entity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No users found for this ID!"));
 
-        return userMapper.toDto(entity);
+        return userMapper.toResponseDTO(entity);
     }
 
-    public UserDTO createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+        userRequestDTO.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
 
-        return userMapper.toDto(userRepository.save(user));
+        return userMapper.toResponseDTO(userRepository.save(userMapper.toEntity(userRequestDTO)));
     }
 
-    public UserDTO updateUser(UserDTO user) {
-        var entity = userRepository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("No users found for this ID!"));
+    public UserResponseDTO updateUser(UserRequestDTO userRequestDTO) {
+        var entity = userRepository.findById(userRequestDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("No users found for this ID!"));
 
-        if (!UsernameValidator.isValidUsername(user.getUsername())) {
+        if (!UsernameValidator.isValidUsername(userRequestDTO.getUsername())) {
             throw new IllegalArgumentException("Invalid Username!");
         }
 
-        entity.setUsername(user.getUsername());
-        entity.setFirstName(user.getFirstName());
-        entity.setLastName(user.getLastName());
-        entity.setEmail(user.getEmail());
+        entity.setUsername(userRequestDTO.getUsername());
+        entity.setFirstName(userRequestDTO.getFirstName());
+        entity.setLastName(userRequestDTO.getLastName());
+        entity.setEmail(userRequestDTO.getEmail());
 
-        if (!user.getPassword().isEmpty() && !user.getPassword().equals(entity.getPassword())) {
-            entity.setPassword(user.getPassword());
+        if (!userRequestDTO.getPassword().isEmpty() && !passwordEncoder.matches(userRequestDTO.getPassword(), entity.getPassword())) {
+            entity.setPassword(passwordEncoder.encode(userRequestDTO.getPassword()));
         }
 
         userRepository.save(entity);
 
-        return userMapper.toDto(entity);
+        return userMapper.toResponseDTO(entity);
     }
 
     public void deleteUser (Long id) {
